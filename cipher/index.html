@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cipher Lab - Product Cipher</title>
+    
+    <!-- IMPORTANT: Link to your CSS file here -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- D3.js Library for Visualizations -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <!-- If you have other scripts, add them below -->
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2>🔐 Cipher Lab</h2>
+                <p>Learn Cryptography</p>
+            </div>
+            
+            <div class="nav-section">
+                <h3>🚀 Advanced</h3>
+                <a href="#" class="nav-link active" data-page="product">Product Cipher</a>
+            </div>
+            
+            <div class="nav-section">
+                <h3>🔤 Substitution Ciphers</h3>
+                <a href="#" class="nav-link" data-page="caesar">Caesar Cipher</a>
+                <a href="#" class="nav-link" data-page="vigenere">Vigenère Cipher</a>
+                <a href="#" class="nav-link" data-page="monoalphabetic">Monoalphabetic Cipher</a>
+                <a href="#" class="nav-link" data-page="playfair">Playfair Cipher</a>
+                <a href="#" class="nav-link" data-page="hill">Hill Cipher</a>
+                <a href="#" class="nav-link" data-page="otp">One-Time Pad</a>
+            </div>
+            
+            <div class="nav-section">
+                <h3>🔄 Transposition Ciphers</h3>
+                <a href="#" class="nav-link" data-page="railfence">Rail Fence Cipher</a>
+                <a href="#" class="nav-link" data-page="columnar">Columnar Transposition</a>
+            </div>
+        </nav>
+        
+        <div class="main-content">
+            
+            <!-- PRODUCT CIPHER PAGE -->
+            <div id="product-page" class="page active">
+                <h1>Product Cipher</h1>
+                <p class="description">Advanced encryption by combining Substitution and Transposition ciphers</p>
+
+                <!-- Algorithm Explanation -->
+                <div class="algorithm-explanation">
+                    <h3>📘 How Product Cipher Works</h3>
+                    <p>A <strong>Product Cipher</strong> is a powerful hybrid encryption technique that applies a <strong>Substitution Cipher</strong> followed by a <strong>Transposition Cipher</strong> in multiple rounds for significantly stronger security.</p>
+                    
+                    <div class="steps-grid">
+                        <div class="step-box">
+                            <strong>Step 1: Substitution</strong><br>
+                            Replaces each letter using chosen method (Caesar, Vigenère, Playfair, Hill, etc.)
+                        </div>
+                        <div class="step-box">
+                            <strong>Step 2: Transposition</strong><br>
+                            Rearranges the order of letters using Rail Fence or Columnar technique
+                        </div>
+                        <div class="step-box">
+                            <strong>Step 3: Multiple Rounds</strong><br>
+                            The output of one round becomes the input for the next round
+                        </div>
+                    </div>
+
+                    <div class="math-formula">
+                        <strong>Mathematical Flow:</strong><br>
+                        C = T<sub>n</sub>( S<sub>n</sub>( T<sub>n-1</sub>( S<sub>n-1</sub>( ... S<sub>1</sub>(P) ... ))))
+                        <br><small>Where P = Plaintext, S = Substitution, T = Transposition, C = Ciphertext</small>
+                    </div>
+                </div>
+
+                <!-- Input Form -->
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="plaintext">Plaintext</label>
+                        <textarea id="plaintext" rows="3" placeholder="Enter plaintext here... (e.g., HELLO)"></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="substitution">Substitution Method</label>
+                        <select id="substitution">
+                            <option value="caesar">Caesar Cipher</option>
+                            <option value="vigenere">Vigenère Cipher</option>
+                            <option value="monoalphabetic">Monoalphabetic Cipher</option>
+                            <option value="playfair">Playfair Cipher</option>
+                            <option value="hill">Hill Cipher</option>
+                            <option value="otp">One-Time Pad</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="transposition">Transposition Method</label>
+                        <select id="transposition">
+                            <option value="railfence">Rail Fence Cipher</option>
+                            <option value="columnar">Columnar Transposition</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="rounds">Number of Rounds</label>
+                        <input type="number" id="rounds" value="2" min="1" max="10">
+                    </div>
+
+                    <!-- Dynamic key fields -->
+                    <div id="caesar-key-group" class="input-group" style="display: none;">
+                        <label for="caesar-shift">Caesar Shift Value</label>
+                        <input type="number" id="caesar-shift" value="3" min="1" max="25">
+                    </div>
+
+                    <div id="vigenere-key-group" class="input-group" style="display: none;">
+                        <label for="vigenere-key">Vigenère Key</label>
+                        <input type="text" id="vigenere-key" value="KEY" placeholder="Enter key">
+                    </div>
+
+                    <div id="mono-key-group" class="input-group" style="display: none;">
+                        <label for="mono-key">Monoalphabetic Key</label>
+                        <input type="text" id="mono-key" value="ZYXWVUTSRQPONMLKJIHGFEDCBA" placeholder="Enter 26-letter key">
+                    </div>
+
+                    <div id="playfair-key-group" class="input-group" style="display: none;">
+                        <label for="playfair-key">Playfair Key</label>
+                        <input type="text" id="playfair-key" value="MONARCHY" placeholder="Enter key">
+                    </div>
+
+                    <div id="hill-key-group" class="input-group" style="display: none;">
+                        <label for="hill-matrix-size">Hill Matrix Size</label>
+                        <input type="number" id="hill-matrix-size" value="2" min="2" max="3">
+                        <label for="hill-key">Hill Key (comma-separated)</label>
+                        <input type="text" id="hill-key" value="2,1,1,1" placeholder="Enter matrix values">
+                    </div>
+
+                    <div id="otp-key-group" class="input-group" style="display: none;">
+                        <label for="otp-key">One-Time Pad Key</label>
+                        <input type="text" id="otp-key" placeholder="Enter random key (same length as plaintext)">
+                    </div>
+
+                    <div id="railfence-rails-group" class="input-group" style="display: none;">
+                        <label for="railfence-rails">Rail Fence Rails</label>
+                        <input type="number" id="railfence-rails" value="3" min="2" max="10">
+                    </div>
+
+                    <div id="columnar-key-group" class="input-group" style="display: none;">
+                        <label for="columnar-key">Columnar Key</label>
+                        <input type="text" id="columnar-key" value="KEY" placeholder="Enter key">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="encrypt-btn" class="btn primary">Encrypt</button>
+                    <button id="decrypt-btn" class="btn secondary">Decrypt</button>
+                    <button id="avalanche-btn" class="btn secondary">Test Avalanche Effect</button>
+                </div>
+
+                <!-- Results -->
+                <div id="result-display"></div>
+                <div id="visualization"></div>
+            </div>
+
+            <!-- CAESAR CIPHER PAGE -->
+            <div id="caesar-page" class="page">
+                <h1>Caesar Cipher</h1>
+                <p class="description">One of the simplest and most widely known encryption techniques</p>
+
+                <div class="algorithm-explanation">
+                    <h3>📘 How Caesar Cipher Works</h3>
+                    <p>The <strong>Caesar Cipher</strong> is one of the simplest and most widely known encryption techniques. It's a substitution cipher where each letter in plaintext is shifted a fixed number of positions down the alphabet.</p>
+                    
+                    <div class="math-formula">
+                        <h4>🔐 Encryption Formula</h4>
+                        <div class="formula-display">
+                            C<sub>i</sub> = (P<sub>i</sub> + k) mod 26
+                        </div>
+                        <p>Where C = Ciphertext, P = Plaintext, k = Shift value, i = Position in text</p>
+                        
+                        <h4>🔓 Decryption Formula</h4>
+                        <div class="formula-display">
+                            P<sub>i</sub> = (C<sub>i</sub> - k + 26) mod 26
+                        </div>
+                    </div>
+                    
+                    <div class="algorithm-steps">
+                        <h4>📋 Algorithm Steps</h4>
+                        
+                        <div class="step-section">
+                            <h5>Encryption Process:</h5>
+                            <ol class="numbered-steps">
+                                <li><strong>Input plaintext P and shift k</strong></li>
+                                <li><strong>Convert letters → numbers</strong> (A=0, B=1, ..., Z=25)</li>
+                                <li><strong>For each letter:</strong><br>
+                                    C<sub>i</sub> = (P<sub>i</sub> + k) % 26</li>
+                                <li><strong>Convert numbers → letters</strong></li>
+                                <li><strong>Output ciphertext</strong></li>
+                            </ol>
+                        </div>
+                        
+                        <div class="step-section">
+                            <h5>Decryption Process:</h5>
+                            <ol class="numbered-steps">
+                                <li><strong>Input ciphertext C and shift k</strong></li>
+                                <li><strong>Convert letters → numbers</strong> (A=0, B=1, ..., Z=25)</li>
+                                <li><strong>For each letter:</strong><br>
+                                    P<sub>i</sub> = (C<sub>i</sub> - k + 26) % 26</li>
+                                <li><strong>Convert numbers → letters</strong></li>
+                                <li><strong>Output plaintext</strong></li>
+                            </ol>
+                        </div>
+                    </div>
+                    
+                    <div class="example-section">
+                        <h4>💡 Example</h4>
+                        <div class="example-box">
+                            <p><strong>Plaintext:</strong> "HELLO"</p>
+                            <p><strong>Shift:</strong> 3</p>
+                            <div class="example-calculation">
+                                H (7) + 3 = 10 → K<br>
+                                E (4) + 3 = 7 → H<br>
+                                L (11) + 3 = 14 → O<br>
+                                L (11) + 3 = 14 → O<br>
+                                O (14) + 3 = 17 → R
+                            </div>
+                            <p><strong>Ciphertext:</strong> "KHOOR"</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="caesar-input">Plaintext/Ciphertext</label>
+                        <textarea id="caesar-input" rows="3" placeholder="Enter text to encrypt/decrypt..."></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="caesar-shift-input">Shift Value</label>
+                        <input type="number" id="caesar-shift-input" value="3" min="1" max="25">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="caesar-encrypt-btn" class="btn primary">🔐 Encrypt</button>
+                    <button id="caesar-decrypt-btn" class="btn secondary">🔓 Decrypt</button>
+                </div>
+
+                <div id="caesar-result"></div>
+                <div id="caesar-alphabet-map"></div>
+            </div>
+
+            <!-- VIGENERE CIPHER PAGE -->
+            <div id="vigenere-page" class="page">
+                <h1>Vigenère Cipher</h1>
+                <p class="description">A method of encrypting alphabetic text by using a series of interwoven Caesar ciphers</p>
+
+                <div class="algorithm-explanation">
+                    <h3>📘 How Vigenère Cipher Works</h3>
+                    <p>The <strong>Vigenère Cipher</strong> uses a keyword to determine the shift value for each letter, making it much more secure than a simple Caesar cipher.</p>
+                    
+                    <div class="math-formula">
+                        <strong>Encryption:</strong> C = (P + K) mod 26<br>
+                        <strong>Decryption:</strong> P = (C - K + 26) mod 26<br>
+                        <small>Where P = Plaintext, C = Ciphertext, K = Key letter value</small>
+                    </div>
+                </div>
+
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="vigenere-input">Plaintext/Ciphertext</label>
+                        <textarea id="vigenere-input" rows="3" placeholder="Enter text to encrypt/decrypt..."></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="vigenere-key-input">Key</label>
+                        <input type="text" id="vigenere-key-input" value="KEY" placeholder="Enter keyword">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="vigenere-encrypt-btn" class="btn primary">🔐 Encrypt</button>
+                    <button id="vigenere-decrypt-btn" class="btn secondary">🔓 Decrypt</button>
+                </div>
+
+                <div id="vigenere-result"></div>
+                <div id="vigenere-visualization"></div>
+            </div>
+
+            <!-- MONOALPHABETIC CIPHER PAGE -->
+            <div id="monoalphabetic-page" class="page">
+                <h1>Monoalphabetic Cipher</h1>
+                <p class="description">A substitution cipher where each letter maps to exactly one other letter</p>
+
+                <div class="algorithm-explanation">
+                    <h3>📘 How Monoalphabetic Cipher Works</h3>
+                    <p>The <strong>Monoalphabetic Cipher</strong> uses a fixed substitution alphabet where each letter of the plaintext is mapped to a unique letter in the ciphertext alphabet.</p>
+                </div>
+
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="mono-input">Plaintext/Ciphertext</label>
+                        <textarea id="mono-input" rows="3" placeholder="Enter text to encrypt/decrypt..."></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="mono-key-input">Substitution Key (26 letters)</label>
+                        <input type="text" id="mono-key-input" value="ZYXWVUTSRQPONMLKJIHGFEDCBA" placeholder="Enter 26-letter key">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="mono-encrypt-btn" class="btn primary">🔐 Encrypt</button>
+                    <button id="mono-decrypt-btn" class="btn secondary">🔓 Decrypt</button>
+                </div>
+
+                <div id="mono-result"></div>
+            </div>
+
+            <!-- PLAYFAIR CIPHER PAGE -->
+            <div id="playfair-page" class="page">
+                <h1>Playfair Cipher</h1>
+                <p class="description">A digraph substitution cipher that encrypts pairs of letters</p>
+
+                <div class="algorithm-explanation">
+                    <h3>📘 How Playfair Cipher Works</h3>
+                    <p>The <strong>Playfair Cipher</strong> encrypts pairs of letters (digraphs) using a 5x5 key matrix, making it significantly more secure than simple substitution ciphers.</p>
+                </div>
+
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="playfair-input">Plaintext/Ciphertext</label>
+                        <textarea id="playfair-input" rows="3" placeholder="Enter text to encrypt/decrypt..."></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="playfair-key-input">Key</label>
+                        <input type="text" id="playfair-key-input" value="MONARCHY" placeholder="Enter keyword">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="playfair-encrypt-btn" class="btn primary">🔐 Encrypt</button>
+                    <button id="playfair-decrypt-btn" class="btn secondary">🔓 Decrypt</button>
+                </div>
+
+                <div id="playfair-result"></div>
+            </div>
+
+            <!-- HILL CIPHER PAGE -->
+            <div id="hill-page" class="page">
+                <h1>Hill Cipher</h1>
+                <p class="description">A polygraphic substitution cipher based on linear algebra</p>
+
+                <div class="algorithm-explanation">
+                    <h3>📘 How Hill Cipher Works</h3>
+                    <p>The <strong>Hill Cipher</strong> uses matrix multiplication to encrypt blocks of letters, making it one of the first polygraphic ciphers.</p>
+                </div>
+
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="hill-input">Plaintext/Ciphertext</label>
+                        <textarea id="hill-input" rows="3" placeholder="Enter text to encrypt/decrypt..."></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="hill-matrix-size-input">Matrix Size</label>
+                        <input type="number" id="hill-matrix-size-input" value="2" min="2" max="3">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="hill-key-input">Key Matrix (comma-separated)</label>
+                        <input type="text" id="hill-key-input" value="2,1,1,1" placeholder="Enter matrix values">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="hill-encrypt-btn" class="btn primary">🔐 Encrypt</button>
+                    <button id="hill-decrypt-btn" class="btn secondary">🔓 Decrypt</button>
+                </div>
+
+                <div id="hill-result"></div>
+            </div>
+
+            <div id="otp-page" class="page">
+                <h1>One-Time Pad</h1>
+                <p class="description">Theoretically unbreakable encryption when used correctly</p>
+
+                <div class="algorithm-explanation">
+                    <h3>📘 How One-Time Pad Works</h3>
+                    <p>The <strong>One-Time Pad</strong> is a symmetric encryption technique that uses a random key that is at least as long as the message and is used only once, making it mathematically unbreakable when used correctly.</p>
+                    
+                    <div class="math-formula">
+                        <h4>🔐 Encryption Formula</h4>
+                        <div class="formula-display">
+                            C<sub>i</sub> = (P<sub>i</sub> + K<sub>i</sub>) mod 26
+                        </div>
+                        <p>Where C = Ciphertext, P = Plaintext, K = Key letter value, i = Position in text</p>
+                        
+                        <h4>🔓 Decryption Formula</h4>
+                        <div class="formula-display">
+                            P<sub>i</sub> = (C<sub>i</sub> - K<sub>i</sub> + 26) mod 26
+                        </div>
+                    </div>
+                    
+                    <div class="algorithm-steps">
+                        <h4>📋 Algorithm Steps</h4>
+                        
+                        <div class="step-section">
+                            <h5>🔐 Encryption Process:</h5>
+                            <ol class="numbered-steps">
+                                <li><strong>Take plaintext P and key K</strong></li>
+                                <li><strong>Convert both to uppercase</strong></li>
+                                <li><strong>Remove spaces</strong> (optional for your app)</li>
+                                <li><strong>Check length requirement:</strong><br>
+                                    If length(P) ≠ length(K)<br>
+                                    <span style="color: #ff6b6b;">Show error → "Key must be same length as plaintext"</span></li>
+                                <li><strong>Convert letters to numbers:</strong><br>
+                                    A = 0, B = 1, ..., Z = 25</li>
+                                <li><strong>For each letter:</strong><br>
+                                    C<sub>i</sub> = (P<sub>i</sub> + K<sub>i</sub>) % 26</li>
+                                <li><strong>Convert result back to letters</strong></li>
+                                <li><strong>Display ciphertext C</strong></li>
+                            </ol>
+                        </div>
+                        
+                        <div class="step-section">
+                            <h5>🔓 Decryption Process:</h5>
+                            <ol class="numbered-steps">
+                                <li><strong>Take ciphertext C and same key K</strong></li>
+                                <li><strong>Convert both to uppercase</strong></li>
+                                <li><strong>Convert letters to numbers:</strong><br>
+                                    A = 0, B = 1, ..., Z = 25</li>
+                                <li><strong>For each letter:</strong><br>
+                                    P<sub>i</sub> = (C<sub>i</sub> - K<sub>i</sub>) % 26</li>
+                                <li><strong>If result is negative:</strong><br>
+                                    Add 26</li>
+                                <li><strong>Convert back to letters</strong></li>
+                                <li><strong>Display original plaintext P</strong></li>
+                            </ol>
+                        </div>
+                    </div>
+                    
+                    <div class="example-section">
+                        <h4>💡 Example</h4>
+                        <div class="example-box">
+                            <p><strong>Plaintext:</strong> "HELLO"</p>
+                            <p><strong>Key:</strong> "XMCKL"</p>
+                            <div class="example-calculation">
+                                H (7) + X (23) = 30 → 4 → E<br>
+                                E (4) + M (12) = 16 → Q<br>
+                                L (11) + C (2) = 13 → N<br>
+                                L (11) + K (10) = 21 → V<br>
+                                O (14) + L (11) = 25 → Z
+                            </div>
+                            <p><strong>Ciphertext:</strong> "EQNVZ"</p>
+                        </div>
+                        
+                        <div class="security-note">
+                            <h4>🔒 Security Properties</h4>
+                            <ul class="security-points">
+                                <li><strong>Perfect Secrecy:</strong> Key is random and used only once</li>
+                                <li><strong>Information-Theoretic Security:</strong> Unbreakable without key knowledge</li>
+                                <li><strong>Key Management:</strong> Critical - key must be securely shared</li>
+                                <li><strong>Key Reuse:</strong> NEVER reuse keys - destroys security</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="otp-input">Plaintext/Ciphertext</label>
+                        <textarea id="otp-input" rows="3" placeholder="Enter text to encrypt/decrypt..."></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="otp-key-input">Key (same length as text)</label>
+                        <input type="text" id="otp-key-input" placeholder="Enter random key">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="otp-encrypt-btn" class="btn primary">🔐 Encrypt</button>
+                    <button id="otp-decrypt-btn" class="btn secondary">🔓 Decrypt</button>
+                    <button id="otp-generate-btn" class="btn secondary">🎲 Generate Random Key</button>
+                </div>
+
+                <div id="otp-result"></div>
+                <div id="otp-visualization"></div>
+            </div>
+
+            <!-- RAIL FENCE CIPHER PAGE -->
+            <div id="railfence-page" class="page">
+                <h1>Rail Fence Cipher</h1>
+                <p class="description">A transposition cipher that writes the message in a zigzag pattern</p>
+
+                <div class="algorithm-explanation">
+                    <h3>📘 How Rail Fence Cipher Works</h3>
+                    <p>The <strong>Rail Fence Cipher</strong> writes the plaintext in a zigzag pattern across multiple "rails" and then reads off the rows to create the ciphertext.</p>
+                </div>
+
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="railfence-input">Plaintext/Ciphertext</label>
+                        <textarea id="railfence-input" rows="3" placeholder="Enter text to encrypt/decrypt..."></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="railfence-rails-input">Number of Rails</label>
+                        <input type="number" id="railfence-rails-input" value="3" min="2" max="10">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="railfence-encrypt-btn" class="btn primary">🔐 Encrypt</button>
+                    <button id="railfence-decrypt-btn" class="btn secondary">🔓 Decrypt</button>
+                </div>
+
+                <div id="railfence-result"></div>
+            </div>
+
+            <!-- COLUMNAR TRANSPOSITION PAGE -->
+            <div id="columnar-page" class="page">
+                <h1>Columnar Transposition</h1>
+                <p class="description">A transposition cipher that rearranges the plaintext by columns</p>
+
+                <div class="algorithm-explanation">
+                    <h3>📘 How Columnar Transposition Works</h3>
+                    <p>The <strong>Columnar Transposition</strong> writes the plaintext in rows of a defined width and then reads off the columns in the order specified by the keyword.</p>
+                </div>
+
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="columnar-input">Plaintext/Ciphertext</label>
+                        <textarea id="columnar-input" rows="3" placeholder="Enter text to encrypt/decrypt..."></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="columnar-key-input">Key</label>
+                        <input type="text" id="columnar-key-input" value="KEY" placeholder="Enter keyword">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="columnar-encrypt-btn" class="btn primary">🔐 Encrypt</button>
+                    <button id="columnar-decrypt-btn" class="btn secondary">🔓 Decrypt</button>
+                </div>
+
+                <div id="columnar-result"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Your JavaScript files -->
+    <script src="modules/ceaser.js"></script>
+    <script src="modules/vigenere.js"></script>
+    <script src="modules/monoalphabetic.js"></script>
+    <script src="modules/playfair.js"></script>
+    <script src="modules/hillcipher.js"></script>
+    <script src="modules/otp.js"></script>
+    <script src="modules/railfence.js"></script>
+    <script src="modules/columnar.js"></script>
+    <script src="modules/product.js"></script>
+    <script src="modules/visualizations.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

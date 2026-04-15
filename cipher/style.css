@@ -1,0 +1,630 @@
+/* ================================================
+   CIPHER LAB - ABSTRACT BLUE NETWORK THEME
+   Abstract connection dots | Digital Blue | Network Concept
+   ================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #e0f0ff;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+
+    /* Main Background - Abstract Blue Network */
+    background: 
+        radial-gradient(circle at 20% 30%, rgba(0, 140, 255, 0.18) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(0, 220, 255, 0.15) 0%, transparent 60%),
+        linear-gradient(135deg, #0a1a2f 0%, #0f2b4a 50%, #0a1a2f 100%);
+    background-attachment: fixed;
+}
+
+/* Animated Connection Dots Background */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle, rgba(0, 180, 255, 0.9) 1.2px, transparent 1px),
+        radial-gradient(circle, rgba(100, 220, 255, 0.7) 1px, transparent 1px);
+    background-size: 55px 55px, 85px 85px;
+    background-position: 0 0, 30px 40px;
+    pointer-events: none;
+    z-index: -1;
+    animation: networkDrift 30s linear infinite;
+    opacity: 0.85;
+}
+
+/* Subtle Glowing Network Lines */
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        45deg,
+        transparent 40%,
+        rgba(0, 200, 255, 0.04) 50%,
+        transparent 60%
+    );
+    pointer-events: none;
+    z-index: -1;
+    animation: pulseLines 18s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes networkDrift {
+    0% { background-position: 0 0, 30px 40px; }
+    100% { background-position: 150px 150px, 180px 190px; }
+}
+
+@keyframes pulseLines {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 0.85; }
+}
+
+/* Container */
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar - Glassmorphic Blue */
+.sidebar {
+    width: 270px;
+    background: rgba(10, 25, 55, 0.92);
+    backdrop-filter: blur(15px);
+    border-right: 1px solid rgba(0, 180, 255, 0.35);
+    padding: 30px 20px;
+    box-shadow: 5px 0 25px rgba(0, 100, 200, 0.25);
+    z-index: 10;
+}
+
+.sidebar-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 25px;
+    border-bottom: 2px solid rgba(0, 180, 255, 0.3);
+}
+
+.sidebar-header h2 {
+    color: #00e0ff;
+    font-size: 1.85rem;
+    margin-bottom: 8px;
+    text-shadow: 0 0 20px rgba(0, 224, 255, 0.7);
+}
+
+.sidebar-header p {
+    color: #80c8ff;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.nav-section {
+    margin-bottom: 30px;
+}
+
+/* Navigation */
+.nav-section h3 {
+    color: #80c8ff;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+    opacity: 0.9;
+}
+
+.nav-link {
+    display: block;
+    padding: 14px 20px;
+    color: #b0d8ff;
+    text-decoration: none;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+    background: rgba(0, 120, 255, 0.12);
+    border: 1px solid transparent;
+}
+
+.nav-link:hover {
+    background: rgba(0, 180, 255, 0.28);
+    color: white;
+    transform: translateX(10px);
+    box-shadow: 0 0 18px rgba(0, 200, 255, 0.5);
+    border-color: rgba(0, 200, 255, 0.4);
+}
+
+.nav-link.active {
+    background: rgba(0, 200, 255, 0.35);
+    color: #ffffff;
+    box-shadow: 0 0 25px rgba(0, 224, 255, 0.6);
+    border-color: #00d4ff;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+}
+
+/* Page */
+.page {
+    display: none;
+    background: rgba(15, 35, 75, 0.94);
+    backdrop-filter: blur(16px);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 15px 45px rgba(0, 100, 200, 0.3);
+    border: 1px solid rgba(0, 180, 255, 0.3);
+}
+
+.page.active {
+    display: block;
+}
+
+.page h1 {
+    color: #00f0ff;
+    font-size: 2.6rem;
+    margin-bottom: 10px;
+    text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+}
+
+.page .description {
+    color: #a0d0ff;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+/* Algorithm Explanation */
+.algorithm-explanation {
+    background: rgba(10, 30, 65, 0.95);
+    border: 1px solid rgba(0, 180, 255, 0.45);
+    border-radius: 16px;
+    padding: 30px;
+    margin: 25px 0 35px 0;
+}
+
+.algorithm-explanation h3 {
+    color: #00d4ff;
+    margin-bottom: 15px;
+}
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin: 25px 0;
+}
+
+.step-box {
+    background: rgba(5, 20, 50, 0.9);
+    border: 1px solid rgba(0, 200, 255, 0.3);
+    border-radius: 14px;
+    padding: 22px;
+    transition: all 0.3s ease;
+}
+
+.step-box:hover {
+    border-color: #00e0ff;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 180, 255, 0.25);
+}
+
+/* Math Formula */
+.math-formula {
+    background: rgba(5, 15, 40, 0.95);
+    border-left: 6px solid #00b4ff;
+    padding: 20px 25px;
+    margin-top: 20px;
+    font-family: 'Courier New', monospace;
+    color: #80e8ff;
+    border-radius: 10px;
+    line-height: 1.8;
+}
+
+.formula-display {
+    background: rgba(0, 100, 200, 0.2);
+    border: 2px solid #0088ff;
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin: 15px 0;
+    font-size: 1.2rem;
+    text-align: center;
+    color: #00e0ff;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.algorithm-steps {
+    margin: 30px 0;
+}
+
+.step-section {
+    background: rgba(10, 30, 65, 0.9);
+    border: 1px solid rgba(0, 180, 255, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.step-section h5 {
+    color: #00d4ff;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.numbered-steps {
+    list-style: none;
+    counter-reset: step-counter;
+}
+
+.numbered-steps li {
+    counter-increment: step-counter;
+    margin-bottom: 12px;
+    position: relative;
+    padding-left: 35px;
+    color: #b0d8ff;
+    line-height: 1.6;
+}
+
+.numbered-steps li::before {
+    content: counter(step-counter);
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: linear-gradient(135deg, #0099ff, #0066ff);
+    color: white;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.85rem;
+    box-shadow: 0 2px 8px rgba(0, 120, 255, 0.4);
+}
+
+.example-section {
+    margin: 30px 0;
+}
+
+.example-box {
+    background: rgba(5, 25, 55, 0.95);
+    border: 2px solid #00a8ff;
+    border-radius: 14px;
+    padding: 25px;
+    box-shadow: 0 8px 25px rgba(0, 150, 255, 0.2);
+}
+
+.example-calculation {
+    background: rgba(0, 50, 100, 0.5);
+    border-left: 4px solid #00ccff;
+    padding: 15px 20px;
+    margin: 15px 0;
+    font-family: 'Courier New', monospace;
+    border-radius: 8px;
+    line-height: 1.8;
+    color: #80e8ff;
+}
+
+.security-note {
+    background: rgba(5, 30, 65, 0.9);
+    border: 1px solid rgba(0, 180, 255, 0.4);
+    border-radius: 14px;
+    padding: 25px;
+    margin: 30px 0;
+}
+
+.security-note h4 {
+    color: #00d4ff;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.security-points {
+    list-style: none;
+    padding: 0;
+}
+
+.security-points li {
+    background: rgba(0, 120, 255, 0.1);
+    border-left: 4px solid #00ccff;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    color: #b0d8ff;
+    line-height: 1.6;
+}
+
+.security-points li strong {
+    color: #00ff80;
+}
+
+/* Playfair Matrix Display */
+.matrix-display {
+    background: rgba(5, 30, 65, 0.9);
+    border: 1px solid rgba(0, 180, 255, 0.4);
+    border-radius: 14px;
+    padding: 25px;
+    margin: 20px 0;
+}
+
+.matrix-display h4 {
+    color: #00d4ff;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.matrix-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin: 15px 0;
+}
+
+.matrix-row {
+    display: flex;
+    gap: 4px;
+}
+
+.matrix-cell {
+    background: rgba(0, 100, 200, 0.2);
+    border: 2px solid #00ccff;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    font-weight: bold;
+    color: #00ff80;
+    text-align: center;
+    min-width: 30px;
+    transition: all 0.3s ease;
+}
+
+.matrix-cell:hover {
+    background: rgba(0, 150, 255, 0.3);
+    border-color: #00ddff;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 180, 255, 0.3);
+}
+
+/* OTP Enhanced Visualization */
+.otp-summary {
+    background: rgba(5, 25, 55, 0.95);
+    border: 1px solid rgba(0, 180, 255, 0.4);
+    border-radius: 14px;
+    padding: 25px;
+    margin: 20px 0;
+}
+
+.otp-summary h4 {
+    color: #00d4ff;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.otp-details {
+    background: rgba(10, 30, 65, 0.9);
+    border: 1px solid rgba(0, 180, 255, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 15px 0;
+}
+
+.otp-details p {
+    color: #b0d8ff;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.otp-details strong {
+    color: #00ff80;
+}
+
+/* Animation and Hover Effects for Visualizations */
+.letter-box {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.letter-box:hover {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+    box-shadow: 0 6px 20px rgba(0, 180, 255, 0.4);
+}
+
+.letter-text {
+    transition: all 0.3s ease;
+}
+
+.original-letter, .shifted-letter {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.original-letter:hover, .shifted-letter:hover {
+    transform: scale(1.3);
+    filter: drop-shadow(0 0 8px rgba(0, 200, 255, 0.6));
+}
+
+/* Animated arrows */
+.arrows path {
+    animation: dashAnimation 2s linear infinite;
+}
+
+@keyframes dashAnimation {
+    to {
+        stroke-dashoffset: -10;
+    }
+}
+
+/* Pulse animation for important elements */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.pulse-animation {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.8s ease-out;
+}
+
+/* Form Inputs */
+.input-group {
+    margin-bottom: 22px;
+}
+
+.input-group label {
+    display: block;
+    color: #80c8ff;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea {
+    width: 100%;
+    padding: 14px 16px;
+    background: rgba(10, 25, 55, 0.85);
+    border: 2px solid rgba(0, 160, 255, 0.4);
+    border-radius: 12px;
+    color: #e0f0ff;
+    font-size: 1rem;
+}
+
+.input-group input:focus,
+.input-group select:focus,
+.input-group textarea:focus {
+    border-color: #00d4ff;
+    box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.15);
+    outline: none;
+}
+
+/* Buttons */
+.btn {
+    padding: 14px 32px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.btn.primary {
+    background: linear-gradient(135deg, #0099ff, #0066ff);
+    color: white;
+    box-shadow: 0 6px 20px rgba(0, 120, 255, 0.5);
+}
+
+.btn.primary:hover {
+    background: linear-gradient(135deg, #00bbff, #0088ff);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 160, 255, 0.6);
+}
+
+.btn.secondary {
+    background: linear-gradient(135deg, #004499, #002266);
+    color: white;
+}
+
+.btn.secondary:hover {
+    background: linear-gradient(135deg, #0055bb, #003377);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 80, 180, 0.5);
+}
+
+.button-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+/* Results & Visualizations */
+#result-display,
+#caesar-alphabet-map,
+#vigenere-visualization,
+#rail-visualization,
+#col-visualization,
+#mono-mapping,
+#playfair-visualization,
+#hill-visualization,
+#otp-visualization,
+#visualization {
+    background: rgba(10, 25, 55, 0.95);
+    border: 1px solid rgba(0, 180, 255, 0.35);
+    border-radius: 16px;
+    padding: 28px;
+    margin: 25px auto;
+    box-shadow: 0 8px 30px rgba(0, 100, 200, 0.25);
+    width: 90%;
+    max-width: 800px;
+    display: block;
+    clear: both;
+}
+
+.result-summary {
+    background: linear-gradient(135deg, rgba(0, 120, 255, 0.2), rgba(0, 200, 255, 0.15));
+    border: 1px solid #00b4ff;
+    border-radius: 14px;
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+/* Round Card */
+.round-card {
+    background: rgba(10, 30, 65, 0.95);
+    border: 1px solid #00a8ff;
+    border-radius: 14px;
+    padding: 24px;
+    margin: 18px 0;
+}
+
+.round-header {
+    background: linear-gradient(90deg, #0088ff, #00ccff);
+    color: white;
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 18px;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .container {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+    }
+    .main-content {
+        padding: 25px;
+    }
+}
