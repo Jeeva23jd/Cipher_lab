@@ -4,10 +4,12 @@ function caesarCipher(text, shift, decrypt = false) {
     const actualShift = decrypt ? -shift : shift;
     const steps = [];
 
-    const result = text.replace(/[A-Z]/g, char => {
-        const p = char.charCodeAt(0) - 65;
+    const result = text.replace(/[A-Za-z]/g, char => {
+        const isUpperCase = char === char.toUpperCase();
+        const base = isUpperCase ? 65 : 97;
+        const p = char.charCodeAt(0) - base;
         let c = (p + actualShift + 26 * 10) % 26; // +26*10 to handle negative safely
-        const resultChar = String.fromCharCode(c + 65);
+        const resultChar = String.fromCharCode(c + base);
 
         steps.push({
             original: char,

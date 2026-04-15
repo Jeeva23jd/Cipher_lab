@@ -5,7 +5,7 @@ function createD3CaesarVisualization(shift, plaintext, ciphertext) {
     const container = d3.select("#caesar-alphabet-map");
     container.html(""); // Clear previous visualization
     
-    const width = 800;
+    const width = 1200;
     const height = 400;
     const margin = { top: 40, right: 40, bottom: 60, left: 40 };
     
@@ -98,21 +98,42 @@ function createD3CaesarVisualization(shift, plaintext, ciphertext) {
         .duration(400)
         .attr("transform", "scale(1)");
     
-    // Draw arrows for mapped letters
+    // Draw curved arrows for mapped letters
     const arrowGroup = svg.append("g")
         .attr("class", "arrows");
     
-    // Animated arrows for mapped letters
+    // Animated curved arrows for mapped letters
     data.forEach((d, i) => {
         if (d.isInPlaintext || d.isInCiphertext) {
+            const startX = xScale(d.original) + 8;
+            const startY = margin.top + 20;
+            const endX = xScale(d.original) + 8;
+            const endY = height - margin.bottom - 80;
+            const controlY = (startY + endY) / 2;
+            const curveOffset = 30; // Curve the arrow
+            
+            // Create curved path using quadratic Bezier curve
+            const curvedPath = `M ${startX} ${startY} Q ${startX + curveOffset} ${controlY} ${endX} ${endY}`;
+            
             const arrow = arrowGroup.append("path")
-                .attr("d", `M ${xScale(d.original) + 8} ${margin.top + 20} L ${xScale(d.original) + 8} ${height - margin.bottom - 80}`)
+                .attr("d", curvedPath)
                 .attr("stroke", "#00d4ff")
                 .attr("stroke-width", 2)
                 .attr("fill", "none")
                 .attr("marker-end", "url(#arrowhead)")
                 .attr("opacity", 0)
                 .attr("stroke-dasharray", "5,5");
+            
+            // Add transformation label (h → k)
+            const transformLabel = arrowGroup.append("text")
+                .attr("x", startX + curveOffset/2)
+                .attr("y", controlY)
+                .attr("text-anchor", "middle")
+                .attr("font-size", "14px")
+                .attr("font-weight", "bold")
+                .attr("fill", "#ff9900")
+                .attr("opacity", 0)
+                .text(`${d.original} → ${d.shifted}`);
             
             // Animate arrow appearance
             arrow.transition()
@@ -123,6 +144,12 @@ function createD3CaesarVisualization(shift, plaintext, ciphertext) {
                     const length = this.getTotalLength();
                     return d3.interpolate(length, 0);
                 });
+            
+            // Animate transformation label
+            transformLabel.transition()
+                .duration(600)
+                .delay(i * 50 + 800)
+                .attr("opacity", 1);
         }
     });
     
@@ -155,17 +182,18 @@ function createD3CaesarVisualization(shift, plaintext, ciphertext) {
         .attr("font-size", "14px")
         .attr("font-weight", "bold")
         .attr("fill", "#00d4ff")
-        .text(`Shifted Alphabet (k=${shift})`);
-}
+        .text("Shifted Alphabet");
+    
+    }
 
 // Vigenère Cipher Visualization
 function createD3VigenereVisualization(key, plaintext, ciphertext) {
     const container = d3.select("#vigenere-visualization");
     container.html(""); // Clear previous visualization
     
-    const width = 900;
-    const height = 450;
-    const margin = { top: 40, right: 40, bottom: 80, left: 40 };
+    const width = 800;
+    const height = 500;
+    const margin = { top: 40, right: 40, bottom: 100, left: 40 };
     
     const svg = container.append("svg")
         .attr("width", width)
@@ -214,16 +242,7 @@ function createD3VigenereVisualization(key, plaintext, ciphertext) {
     const plaintextGroup = svg.append("g")
         .attr("transform", `translate(0, ${yScale('Plaintext')})`);
     
-    plaintextGroup.append("text")
-        .attr("x", margin.left - 10)
-        .attr("y", yScale.bandwidth() / 2)
-        .attr("text-anchor", "end")
-        .attr("dominant-baseline", "middle")
-        .attr("font-size", "12px")
-        .attr("font-weight", "bold")
-        .attr("fill", "#00d4ff")
-        .text("Plaintext");
-    
+        
     const plaintextBoxes = plaintextGroup.selectAll(".plaintext-box")
         .data(data)
         .enter()
@@ -231,7 +250,7 @@ function createD3VigenereVisualization(key, plaintext, ciphertext) {
         .attr("class", "plaintext-box")
         .attr("x", d => xScale(d.position))
         .attr("y", 0)
-        .attr("width", xScale.bandwidth())
+        .attr("width", xScale.bandwidth() * 0.9)
         .attr("height", yScale.bandwidth())
         .attr("fill", "rgba(0, 120, 255, 0.2)")
         .attr("stroke", "#0099ff")
@@ -271,16 +290,7 @@ function createD3VigenereVisualization(key, plaintext, ciphertext) {
         const keyGroup = svg.append("g")
             .attr("transform", `translate(0, ${yScale('Key (Repeated)')})`);
         
-        keyGroup.append("text")
-            .attr("x", margin.left - 10)
-            .attr("y", yScale.bandwidth() / 2)
-            .attr("text-anchor", "end")
-            .attr("dominant-baseline", "middle")
-            .attr("font-size", "12px")
-            .attr("font-weight", "bold")
-            .attr("fill", "#00ccff")
-            .text("Key (Repeated to Match)");
-        
+                
         const keyBoxes = keyGroup.selectAll(".key-box")
             .data(data)
             .enter()
@@ -288,7 +298,7 @@ function createD3VigenereVisualization(key, plaintext, ciphertext) {
             .attr("class", "key-box")
             .attr("x", d => xScale(d.position))
             .attr("y", 0)
-            .attr("width", xScale.bandwidth())
+            .attr("width", xScale.bandwidth() * 0.9)
             .attr("height", yScale.bandwidth())
             .attr("fill", "rgba(0, 200, 255, 0.2)")
             .attr("stroke", "#00ccff")
@@ -329,16 +339,7 @@ function createD3VigenereVisualization(key, plaintext, ciphertext) {
         const mathGroup = svg.append("g")
             .attr("transform", `translate(0, ${yScale('Math Operations')})`);
         
-        mathGroup.append("text")
-            .attr("x", margin.left - 10)
-            .attr("y", yScale.bandwidth() / 2)
-            .attr("text-anchor", "end")
-            .attr("dominant-baseline", "middle")
-            .attr("font-size", "12px")
-            .attr("font-weight", "bold")
-            .attr("fill", "#ff9900")
-            .text("Operations: Cᵢ = (Pᵢ + Kᵢ) mod 26");
-        
+                
         const mathBoxes = mathGroup.selectAll(".math-box")
             .data(data)
             .enter()
@@ -346,7 +347,7 @@ function createD3VigenereVisualization(key, plaintext, ciphertext) {
             .attr("class", "math-box")
             .attr("x", d => xScale(d.position))
             .attr("y", 0)
-            .attr("width", xScale.bandwidth())
+            .attr("width", xScale.bandwidth() * 0.9)
             .attr("height", yScale.bandwidth())
             .attr("fill", "rgba(255, 153, 0, 0.1)")
             .attr("stroke", "#ff9900")
@@ -374,7 +375,7 @@ function createD3VigenereVisualization(key, plaintext, ciphertext) {
             .attr("font-weight", "bold")
             .attr("fill", "#e0f0ff")
             .attr("opacity", 0)
-            .text(d => `(${d.charCode}+${d.keyCode})%26=${d.cipherCode}`);
+            .text(d => `(${d.charCode}+${d.keyCode})%26=${(d.charCode + d.keyCode) % 26}`);
         
         mathTexts.transition()
             .duration(500)
@@ -387,16 +388,7 @@ function createD3VigenereVisualization(key, plaintext, ciphertext) {
         const cipherGroup = svg.append("g")
             .attr("transform", `translate(0, ${yScale('Ciphertext')})`);
         
-        cipherGroup.append("text")
-            .attr("x", margin.left - 10)
-            .attr("y", yScale.bandwidth() / 2)
-            .attr("text-anchor", "end")
-            .attr("dominant-baseline", "middle")
-            .attr("font-size", "12px")
-            .attr("font-weight", "bold")
-            .attr("fill", "#00ff80")
-            .text("Ciphertext");
-        
+                
         const cipherBoxes = cipherGroup.selectAll(".cipher-box")
             .data(data)
             .enter()
@@ -404,7 +396,7 @@ function createD3VigenereVisualization(key, plaintext, ciphertext) {
             .attr("class", "cipher-box")
             .attr("x", d => xScale(d.position))
             .attr("y", 0)
-            .attr("width", xScale.bandwidth())
+            .attr("width", xScale.bandwidth() * 0.9)
             .attr("height", yScale.bandwidth())
             .attr("fill", "rgba(0, 255, 128, 0.2)")
             .attr("stroke", "#00ff80")
@@ -487,7 +479,7 @@ function createD3OTPVisualization(key, plaintext, ciphertext) {
     const container = d3.select("#otp-visualization");
     container.html(""); // Clear previous visualization
     
-    const width = 900;
+    const width = 800;
     const height = 400;
     const margin = { top: 40, right: 40, bottom: 80, left: 40 };
     
@@ -526,16 +518,7 @@ function createD3OTPVisualization(key, plaintext, ciphertext) {
         const g = svg.append("g")
             .attr("transform", `translate(0, ${yScale(group)})`);
         
-        g.append("text")
-            .attr("x", margin.left - 10)
-            .attr("y", yScale.bandwidth() / 2)
-            .attr("text-anchor", "end")
-            .attr("dominant-baseline", "middle")
-            .attr("font-size", "12px")
-            .attr("font-weight", "bold")
-            .attr("fill", "#00d4ff")
-            .text(group);
-        
+                
         // Add letter boxes with animation
         const letterBoxes = g.selectAll(".letter")
             .data(data)
@@ -544,7 +527,7 @@ function createD3OTPVisualization(key, plaintext, ciphertext) {
             .attr("class", "letter-box")
             .attr("x", d => xScale(d.position))
             .attr("y", 0)
-            .attr("width", xScale.bandwidth())
+            .attr("width", xScale.bandwidth() * 0.9)
             .attr("height", yScale.bandwidth())
             .attr("fill", (d, i) => {
                 if (group === 'Plaintext') return "rgba(0, 120, 255, 0.2)";
@@ -590,7 +573,7 @@ function createD3OTPVisualization(key, plaintext, ciphertext) {
             .text(d => {
                 if (group === 'Plaintext') return d.original;
                 if (group === 'Key') return d.keyChar;
-                if (group === 'Operation') return `${d.charCode}+${d.keyCode}=${d.cipherCode}`;
+                if (group === 'Operation') return `${d.charCode}+${d.keyCode}=${(d.charCode + d.keyCode) % 26}`;
                 return d.encrypted;
             });
         
@@ -633,6 +616,23 @@ function createD3OTPVisualization(key, plaintext, ciphertext) {
         .attr("font-size", "12px")
         .attr("fill", "#80e8ff")
         .text("Cᵢ = (Pᵢ + Kᵢ) mod 26 | Pᵢ = (Cᵢ - Kᵢ + 26) mod 26");
+    
+    // Add mapping labels at the bottom for Vigenère cipher
+    const mappingY = height - 40;
+    data.forEach((d, i) => {
+        // Ensure we have the encrypted character
+        const encryptedChar = d.encrypted || cleanCipher[i] || '?';
+        console.log(`Mapping: ${d.original}->${encryptedChar}`); // Debug log
+        const mappingLabel = svg.append("text")
+            .attr("x", xScale(d.position) + xScale.bandwidth() / 2)
+            .attr("y", mappingY)
+            .attr("text-anchor", "middle")
+            .attr("font-size", "14px")
+            .attr("font-weight", "bold")
+            .attr("fill", "#ff6b6b")
+            .attr("opacity", 1) // Make immediately visible
+            .text(`${d.original}->${encryptedChar}`);
+    });
     
     // Add security note
     if (cleanText.length !== cleanKey.length) {
@@ -1522,7 +1522,7 @@ function createD3MonoalphabeticVisualization(key, plaintext, ciphertext) {
         .attr("class", "original-box")
         .attr("x", d => xScale(d.original))
         .attr("y", 0)
-        .attr("width", xScale.bandwidth())
+        .attr("width", xScale.bandwidth() * 0.9)
         .attr("height", yScale.bandwidth())
         .attr("fill", d => d.isUsed ? "rgba(0, 120, 255, 0.3)" : "rgba(0, 100, 200, 0.1)")
         .attr("stroke", "#0099ff")
@@ -1604,7 +1604,7 @@ function createD3MonoalphabeticVisualization(key, plaintext, ciphertext) {
             .attr("class", "mapped-box")
             .attr("x", d => xScale(d.original))
             .attr("y", 0)
-            .attr("width", xScale.bandwidth())
+            .attr("width", xScale.bandwidth() * 0.9)
             .attr("height", yScale.bandwidth())
             .attr("fill", d => d.isUsed ? "rgba(0, 255, 128, 0.3)" : "rgba(0, 200, 200, 0.1)")
             .attr("stroke", d => d.isUsed ? "#00ff80" : "#00ccff")

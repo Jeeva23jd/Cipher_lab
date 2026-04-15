@@ -1,5 +1,51 @@
 // script.js - Main File
 
+// Enhanced Output Display Helper
+function createEnhancedOutput(type, content, metadata = {}) {
+    const container = document.createElement('div');
+    container.className = `output-container output-type-${type} fade-in`;
+    
+    const header = document.createElement('div');
+    header.className = 'output-header';
+    
+    const label = document.createElement('div');
+    label.className = 'output-label';
+    
+    const icon = document.createElement('div');
+    icon.className = 'output-icon';
+    icon.textContent = type === 'encrypted' ? '🔒' : '🔓';
+    
+    const labelText = document.createElement('span');
+    labelText.textContent = type === 'encrypted' ? 'Encrypted' : 'Decrypted';
+    
+    label.appendChild(icon);
+    label.appendChild(labelText);
+    header.appendChild(label);
+    
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'output-content';
+    contentDiv.textContent = content;
+    
+    container.appendChild(header);
+    container.appendChild(contentDiv);
+    
+    if (Object.keys(metadata).length > 0) {
+        const metaDiv = document.createElement('div');
+        metaDiv.className = 'output-meta';
+        
+        Object.entries(metadata).forEach(([key, value]) => {
+            const metaItem = document.createElement('div');
+            metaItem.className = 'output-meta-item';
+            metaItem.textContent = `${key}: ${value}`;
+            metaDiv.appendChild(metaItem);
+        });
+        
+        container.appendChild(metaDiv);
+    }
+    
+    return container;
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     setupNavigation();
     setupProductCipher();
@@ -199,7 +245,8 @@ function setupMonoalphabeticCipher() {
         if (!text) return alert("Please enter text");
         const result = monoalphabeticCipher(text, key);
         const resultDiv = document.getElementById('mono-result');
-        resultDiv.innerHTML = `<strong>Encrypted:</strong> <span style="color:#00ff80;">${result.text}</span>`;
+        resultDiv.innerHTML = '';
+        resultDiv.appendChild(createEnhancedOutput('encrypted', result.text, {Key: key}));
         // Add D3 visualization
         if (typeof createD3MonoalphabeticVisualization === 'function') {
             createD3MonoalphabeticVisualization(key, text, result.text);
@@ -212,11 +259,18 @@ function setupMonoalphabeticCipher() {
         if (!text) return alert("Please enter text");
         const result = monoalphabeticCipher(text, key, true);
         const resultDiv = document.getElementById('mono-result');
-        resultDiv.innerHTML = `<strong>Decrypted:</strong> <span style="color:#00ff80;">${result.text}</span>`;
+        resultDiv.innerHTML = '';
+        resultDiv.appendChild(createEnhancedOutput('decrypted', result.text, {Key: key}));
         // Add D3 visualization
         if (typeof createD3MonoalphabeticVisualization === 'function') {
             createD3MonoalphabeticVisualization(key, result.text, text);
         }
+    });
+    
+    // Add generate key button functionality
+    document.getElementById('mono-generate-key-btn')?.addEventListener('click', () => {
+        const randomKey = generateRandomKey();
+        document.getElementById('mono-key-input').value = randomKey;
     });
 }
 
@@ -320,7 +374,8 @@ function setupRailFenceCipher() {
         if (!text) return alert("Please enter text");
         const result = railFenceCipher(text, rails);
         const resultDiv = document.getElementById('railfence-result');
-        resultDiv.innerHTML = `<strong>Encrypted:</strong> <span style="color:#00ff80;">${result.text}</span>`;
+        resultDiv.innerHTML = '';
+        resultDiv.appendChild(createEnhancedOutput('encrypted', result.text, {Rails: rails}));
         // Add D3 visualization
         if (typeof createD3RailFenceVisualization === 'function') {
             createD3RailFenceVisualization(text, rails);
@@ -333,7 +388,8 @@ function setupRailFenceCipher() {
         if (!text) return alert("Please enter text");
         const result = railFenceCipher(text, rails, true);
         const resultDiv = document.getElementById('railfence-result');
-        resultDiv.innerHTML = `<strong>Decrypted:</strong> <span style="color:#00ff80;">${result.text}</span>`;
+        resultDiv.innerHTML = '';
+        resultDiv.appendChild(createEnhancedOutput('decrypted', result.text, {Rails: rails}));
         // Add D3 visualization
         if (typeof createD3RailFenceVisualization === 'function') {
             createD3RailFenceVisualization(result.text, rails);
